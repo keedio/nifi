@@ -628,6 +628,7 @@ language governing permissions and limitations under the License. -->
                                                     <include>org.slf4j:slf4j-api</include>
                                                     <include>ch.qos.logback:logback-classic</include>
                                                     <include>ch.qos.logback:logback-core</include>
+                                                    <include>net.logstash.logback:logstash-logback-encoder</include>
                                                 </includes>
                                             </dependency>
                                         </mapping>
