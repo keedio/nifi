@@ -52,6 +52,7 @@
             	<include>slf4j-api</include>
             	<include>logback-classic</include>
             	<include>nifi-api</include>
+            	<include>logstash-logback-encoder</include>
             </includes>
         </dependencySet>
         
