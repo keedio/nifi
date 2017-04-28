@@ -29,12 +29,17 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Set;
 
 import org.slf4j.Logger;
 
@@ -46,6 +51,7 @@ public class FileUtils {
 
     public static final long TRANSFER_CHUNK_SIZE_BYTES = 1024 * 1024 * 8; //8 MB chunks
     public static final long MILLIS_BETWEEN_ATTEMPTS = 50L;
+    private static final Set<PosixFilePermission> FILE_PERMISSION = PosixFilePermissions.fromString("rw-rw-r--");
 
     /**
      * Closes the given closeable quietly - no logging, no exceptions...
@@ -78,13 +84,15 @@ public class FileUtils {
     }
 
     public static void ensureDirectoryExistAndCanAccess(final File dir) throws IOException {
-        if (dir.exists() && !dir.isDirectory()) {
+
+     	if (dir.exists() && !dir.isDirectory()) {
             throw new IOException(dir.getAbsolutePath() + " is not a directory");
         } else if (!dir.exists()) {
             final boolean made = dir.mkdirs();
             if (!made) {
                 throw new IOException(dir.getAbsolutePath() + " could not be created");
             }
+	    Files.setPosixFilePermissions(Paths.get(dir.getCanonicalPath()), FILE_PERMISSION);
         }
         if (!(dir.canRead() && dir.canWrite())) {
             throw new IOException(dir.getAbsolutePath() + " directory does not have read/write privilege");
@@ -591,4 +599,5 @@ public class FileUtils {
 
         return digest.digest();
     }
+
 }
